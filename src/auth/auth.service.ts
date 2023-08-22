@@ -1,6 +1,6 @@
 import { User } from 'src/users/users.model'
 import { UsersService } from './../users/users.service'
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
+import { Injectable } from '@nestjs/common'
 import * as bcrypt from 'bcrypt'
 import { JwtService } from '@nestjs/jwt'
 
@@ -15,10 +15,7 @@ export class AuthService {
     let user = await this.usersService.getUserByEmail(dto.email)
 
     if (user) {
-      throw new HttpException(
-        'User with such email already exists',
-        HttpStatus.BAD_REQUEST,
-      )
+      throw new Error('User with such email already exists')
     }
     const salt = await bcrypt.genSalt(10)
     const hashPassword = await bcrypt.hash(dto.password, salt)
@@ -28,34 +25,40 @@ export class AuthService {
       password: hashPassword,
     })
 
-    return this.generateToken(user)
+    return `${dto.email} created successfully!`
   }
 
   async login(dto) {
-    const user = await this.usersService.getUserByEmail(dto.email)
+    try {
+      const user = await this.usersService.getUserByEmail(dto.email)
 
-    if (!user) {
-      throw new HttpException(
-        'No user with such credintails',
-        HttpStatus.BAD_REQUEST,
-      )
-    }
+      console.log('1')
 
-    bcrypt.compare(dto.password, user.password, (err, res) => {
-      if (!res || err) {
-        throw new HttpException(
-          'No user with such credintails',
-          HttpStatus.BAD_REQUEST,
-        )
+      if (!user) {
+        return null
       }
-    })
 
-    return this.generateToken(user)
+      const isPasswordValid = await bcrypt.compare(dto.password, user.password)
+
+      console.log('2', isPasswordValid, dto.password, user.password)
+
+      if (!isPasswordValid) {
+        return null
+      }
+
+      return this.generateToken(user)
+    } catch (err) {
+      console.log(err)
+    }
   }
 
   async generateToken(user: User) {
-    const payload = { email: user.email, id: user.id }
+    try {
+      const payload = { email: user.email, id: user.id }
 
-    return { token: this.jwtService.sign(payload) }
+      return { token: this.jwtService.sign(payload) }
+    } catch (err) {
+      console.log(err)
+    }
   }
 }

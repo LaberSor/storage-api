@@ -3,7 +3,7 @@ import { AppModule } from './app.module'
 import { API_PREFIX } from './common/constants'
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule)
+  const app = await NestFactory.create(AppModule, { cors: true })
   const PORT = process.env.PORT
 
   app.setGlobalPrefix(API_PREFIX) // localhost:PORT/api....
