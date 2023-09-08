@@ -1,6 +1,10 @@
 import { Module } from '@nestjs/common'
 import { SequelizeModule } from '@nestjs/sequelize'
-import { User } from './users/users.model'
+import { User } from './users/user.model'
+import { Workspace } from './workspace/workspace.model'
+import { UserWorkspaces } from './workspace/user-workspaces.model'
+import { Folder } from './folder/folder.model'
+import { File } from './file/file.model'
 
 // ENV vars do not work TODO: delete mocks var
 
@@ -12,7 +16,7 @@ const databaseProviders = [
     username: process.env.POSTGRES_USER || 'postgres',
     password: process.env.POSTGRES_PASSWORD || 'root',
     database: process.env.POSTGRES_DB || 'storage-db',
-    models: [User],
+    models: [User, Workspace, UserWorkspaces, Folder, File],
     autoLoadModels: true,
   }),
 ]

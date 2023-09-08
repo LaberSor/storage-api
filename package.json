@@ -27,6 +27,7 @@
     "@nestjs/platform-express": "^10.0.0",
     "@nestjs/sequelize": "^10.0.0",
     "bcrypt": "^5.1.0",
+    "nest-cli": "^0.0.5",
     "pg": "^8.11.1",
     "pg-hstore": "^2.3.4",
     "reflect-metadata": "^0.1.13",

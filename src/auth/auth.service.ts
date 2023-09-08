@@ -1,5 +1,5 @@
-import { User } from 'src/users/users.model'
-import { UsersService } from './../users/users.service'
+import { User } from 'src/users/user.model'
+import { UserService } from '../users/user.service'
 import { Injectable } from '@nestjs/common'
 import * as bcrypt from 'bcrypt'
 import { JwtService } from '@nestjs/jwt'
@@ -7,12 +7,12 @@ import { JwtService } from '@nestjs/jwt'
 @Injectable()
 export class AuthService {
   constructor(
-    private usersService: UsersService,
+    private userService: UserService,
     private jwtService: JwtService,
   ) {}
 
   async register(dto) {
-    let user = await this.usersService.getUserByEmail(dto.email)
+    let user = await this.userService.getUserByEmail(dto.email)
 
     if (user) {
       throw new Error('User with such email already exists')
@@ -20,7 +20,7 @@ export class AuthService {
     const salt = await bcrypt.genSalt(10)
     const hashPassword = await bcrypt.hash(dto.password, salt)
 
-    user = await this.usersService.createUser({
+    user = await this.userService.createUser({
       ...dto,
       password: hashPassword,
     })
@@ -30,17 +30,13 @@ export class AuthService {
 
   async login(dto) {
     try {
-      const user = await this.usersService.getUserByEmail(dto.email)
-
-      console.log('1')
+      const user = await this.userService.getUserByEmail(dto.email)
 
       if (!user) {
         return null
       }
 
       const isPasswordValid = await bcrypt.compare(dto.password, user.password)
-
-      console.log('2', isPasswordValid, dto.password, user.password)
 
       if (!isPasswordValid) {
         return null

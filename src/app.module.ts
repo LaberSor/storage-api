@@ -2,8 +2,12 @@ import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common'
 import { ConfigModule } from '@nestjs/config'
 import { DatabaseModule } from './database.module'
 import { AuthModule } from './auth/auth.module'
-import { UsersModule } from './users/users.module'
+import { UserModule } from './users/user.module'
 import { LoggerMiddleware } from './common/logger.middleware'
+import { WorkspaceModule } from './workspace/workspace.module'
+import { FolderModule } from './folder/folder.module'
+import { FileModule } from './file/file.module'
+import { DashboardModule } from './dashboard/dashboard.module'
 
 @Module({
   imports: [
@@ -12,7 +16,11 @@ import { LoggerMiddleware } from './common/logger.middleware'
     }),
     DatabaseModule,
     AuthModule,
-    UsersModule,
+    UserModule,
+    WorkspaceModule,
+    FolderModule,
+    FileModule,
+    DashboardModule,
   ],
   controllers: [],
   providers: [],

@@ -8,15 +8,11 @@ import {
   Res,
 } from '@nestjs/common'
 import { AuthService } from './auth.service'
-import { UsersService } from 'src/users/users.service'
-import { loginUserDto } from './dto/loginUser.dto'
+import { LoginUserDto } from './dto/loginUser.dto'
 
 @Controller('auth')
 export class AuthController {
-  constructor(
-    private authService: AuthService,
-    private usersService: UsersService,
-  ) {}
+  constructor(private authService: AuthService) {}
 
   @Post('register')
   @HttpCode(201)
@@ -28,7 +24,7 @@ export class AuthController {
 
   @Post('/login')
   @HttpCode(200)
-  async login(@Res() res, @Body() loginUserDto: loginUserDto) {
+  async login(@Res() res, @Body() loginUserDto: LoginUserDto) {
     try {
       const user = await this.authService.login(loginUserDto)
 
